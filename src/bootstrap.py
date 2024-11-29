@@ -6,6 +6,7 @@ from src import config
 from src.adapters.repos.lllm_adapter import LLMAdapter
 from src.adapters.repos.project_repo import ProjectRepo
 from src.adapters.repos.prompt_repo import PromptRepo
+from src.services.context_service import ContextService, ContextLLMService
 from src.services.project_services import ProjectService
 from src.services.prompt_services import PromptService
 from src.services.startup_services import StartupService
@@ -20,6 +21,8 @@ class Bootstrap:
         self._prompt_service = None
         self._project_service = None
         self._startup_service = None
+        self._context_service = None
+        self._context_llm_service = None
 
     def database(self):
         if not self._database:
@@ -59,8 +62,18 @@ class Bootstrap:
 
     def prompt_service(self) -> PromptService:
         if not self._prompt_service:
-            self._prompt_service = PromptService(self.llm_adapter())
+            self._prompt_service = PromptService(self.llm_adapter(), self.prompt_repo())
         return self._prompt_service
+
+    def context_service(self) -> ContextService:
+        if not self._context_service:
+            self._context_service = ContextService()
+        return self._context_service
+
+    def context_llm_service(self) -> ContextLLMService:
+        if not self._context_llm_service:
+            self._context_llm_service = ContextLLMService()
+        return self._context_llm_service
 
 
 container = Bootstrap()
