@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from async_pymongo import AsyncClient
 
 from src import config
+from src.adapters.repos.context_repo import ContextRepo
 from src.adapters.repos.lllm_adapter import LLMAdapter
 from src.adapters.repos.project_repo import ProjectRepo
 from src.adapters.repos.prompt_repo import PromptRepo
@@ -23,6 +24,7 @@ class Bootstrap:
         self._startup_service = None
         self._context_service = None
         self._context_llm_service = None
+        self._context_repo = None
 
     def database(self):
         if not self._database:
@@ -67,12 +69,17 @@ class Bootstrap:
 
     def context_service(self) -> ContextService:
         if not self._context_service:
-            self._context_service = ContextService()
+            self._context_service = ContextService(self.context_repo())
         return self._context_service
+
+    def context_repo(self):
+        if not self._context_repo:
+            self._context_repo = ContextRepo(self.database())
+        return self._context_repo
 
     def context_llm_service(self) -> ContextLLMService:
         if not self._context_llm_service:
-            self._context_llm_service = ContextLLMService()
+            self._context_llm_service = ContextLLMService(self.llm_adapter())
         return self._context_llm_service
 
 

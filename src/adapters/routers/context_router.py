@@ -47,19 +47,21 @@ async def upload_zip(
 @context_router.post("/{context_id}/prompt")
 async def send_prompts(
         context_id: ContextId,
-        data: list[Prompt],
+        prompts: list[Prompt],
         container: Bootstrap = Depends(get_container),
 ):
     crud_service = container.context_service()
     llm_service = container.context_llm_service()
 
-    # Получаем контекст, комбинируем с промтами, сохраняем
-    context = await crud_service.get_one_by_id(context_id)
-    context = await llm_service.combine_context_with_prompts(context, data)
-    await crud_service.update_one(context)
+    # Получаем контекст
+    try:
+        context = await crud_service.get_one_by_id(context_id)
+    except LookupError:
+        context = Context(id=context_id, content="")
+        await crud_service.create_one(context)
 
     # Получаем ответ модели, комбинируем контекст с рекомендациями, сохраняем
-    recommendations = await llm_service.send_context(context)
+    recommendations = await llm_service.send_prompts_with_context(prompts, context)
     context = await llm_service.combine_context_with_recommendations(context, recommendations)
     await crud_service.update_one(context)
 

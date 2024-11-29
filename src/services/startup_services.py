@@ -5,7 +5,7 @@ from src.enums import TargetLanguage
 PROMPTS: list[Prompt] = [
     Prompt(
         title="Temp",
-        value="prompt_string",
+        content="prompt_string",
         importance=10,
         language=TargetLanguage.Python,
     )

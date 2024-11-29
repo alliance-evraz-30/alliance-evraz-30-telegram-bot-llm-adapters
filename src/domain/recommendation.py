@@ -7,7 +7,7 @@ RecommendationId = UUID
 
 class Recommendation(BaseModel):
     id: RecommendationId = Field(default_factory=uuid4)
-    importance: int
+    importance: int = 0
     content: str
 
     model_config = ConfigDict(frozen=True)

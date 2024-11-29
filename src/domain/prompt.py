@@ -9,9 +9,9 @@ PromptId = UUID
 
 class Prompt(BaseModel):
     id: PromptId = Field(default_factory=uuid4)
-    title: str
-    value: str
-    importance: int
+    title: str = "NotMatter"
+    content: str
+    importance: int = 0
     language: TargetLanguage = TargetLanguage.Python
 
     model_config = ConfigDict(frozen=True)

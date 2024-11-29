@@ -4,12 +4,14 @@ import uvicorn
 from fastapi import FastAPI
 
 from src import config
+from src.adapters.routers.context_router import context_router
 from src.adapters.routers.project_router import project_router
 from src.bootstrap import get_container
 
 app = FastAPI()
 
 app.include_router(project_router)
+app.include_router(context_router)
 
 
 def main():

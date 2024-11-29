@@ -1,8 +1,10 @@
-from pydantic import BaseModel
+from uuid import UUID, uuid4
 
-ContextId = int
+from pydantic import BaseModel, Field
+
+ContextId = UUID
 
 
 class Context(BaseModel):
-    id: ContextId
-    value: str
+    id: ContextId = Field(default_factory=uuid4)
+    content: str
