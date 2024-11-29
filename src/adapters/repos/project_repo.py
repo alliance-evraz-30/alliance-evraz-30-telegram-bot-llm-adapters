@@ -16,6 +16,7 @@ def document_to_project(document: dict) -> Project:
         path=document["path"],
         structure=document["structure"],
         language=document["language"],
+        context_id=document["context_id"],
     )
 
 

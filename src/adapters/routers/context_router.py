@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, UploadFile, File
 from src.bootstrap import Bootstrap, get_container
 from src.domain.context import Context, ContextId
 from src.domain.prompt import Prompt
-from src.services.context_service import combine_context_with_prompts
 
 context_router = APIRouter(
     prefix="/context",
@@ -25,7 +24,9 @@ async def clear_context(
         context_id: ContextId,
         container: Bootstrap = Depends(get_container),
 ):
-    pass
+    service = container.context_service()
+    await service.clear_one(context_id)
+    return "Ok"
 
 
 @context_router.post("/{context_id}/project")
@@ -34,7 +35,13 @@ async def upload_zip(
         file: UploadFile = File(...),
         container: Bootstrap = Depends(get_container),
 ):
-    pass
+    project = await container.project_service().create_project_from_upload_file(file, context_id)
+
+    # Отправляем проект в LLM, получаем контекст, сохраняем в базу
+    context = await container.prompt_service().send_project(project)
+    await container.context_service().update_one(context)
+
+    return "Ok"
 
 
 @context_router.post("/{context_id}/prompt")
@@ -57,4 +64,3 @@ async def send_prompts(
     await crud_service.update_one(context)
 
     return recommendations
-

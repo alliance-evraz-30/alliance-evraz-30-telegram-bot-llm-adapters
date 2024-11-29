@@ -1,6 +1,7 @@
 from typing import Iterable
 
 from src.domain.context import Context, ContextId
+from src.domain.project import Project
 from src.domain.prompt import Prompt
 from src.domain.recommendation import Recommendation
 
@@ -30,4 +31,7 @@ class ContextLLMService:
         pass
 
     async def send_context(self, context: Context) -> list[Recommendation]:
+        pass
+
+    async def send_project(self, project: Project) -> Context:
         pass

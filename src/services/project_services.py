@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi import UploadFile
 
 from src.adapters.repos.project_repo import ProjectRepo
+from src.domain.context import ContextId
 from src.domain.project import Project
 from src.enums import TargetLanguage
 
@@ -89,23 +90,25 @@ class ProjectService:
         self._repo = repo
         self._base_project_dir = base_project_dir
 
-    async def create_project_from_upload_file(self, file: UploadFile) -> Project:
+    async def create_project_from_upload_file(self, file: UploadFile, context_id: ContextId) -> Project:
         path = unpack_upload_file(file, self._base_project_dir)
         result = Project(
             title=path.name,
             path=path,
             structure=parse_project_structure(path),
             language=TargetLanguage.Python,
+            context_id=context_id,
         )
         await self._repo.add_one(result)
         return result
 
-    async def create_project_from_project_root(self, project_root: Path) -> Project:
+    async def create_project_from_project_root(self, project_root: Path, context_id: ContextId) -> Project:
         result = Project(
             title=project_root.name,
             path=project_root,
             structure=parse_project_structure(project_root),
             language=TargetLanguage.Python,
+            context_id=context_id,
         )
         await self._repo.add_one(result)
         return result
