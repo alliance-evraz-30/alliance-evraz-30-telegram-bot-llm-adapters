@@ -30,13 +30,13 @@ def client():
 
 CONTEXT_ID = UUID("cf08492e-1984-4f0b-bf61-fde6e4f4e4ad")
 
-MESSAGE = "А дальше?"
+MESSAGE = ("Покажи мне эндпоинт,  на который я могу прислать тебе файл")
 
 
 @pytest.mark.asyncio
 async def test_foo(client):
-    # ОЧИЩАЕМ КОНТЕКСТ, ИНАЧЕ КОММЕНТИРУЕМ СЛЕДУЮУЮ СТРОКУ
-    client.post(f"/context/{CONTEXT_ID}/clear")
+    # ОЧИЩАЕМ КОНТЕКСТ, ИНАЧЕ КОММЕНТИРУЕМ СЛЕДУЮЩУЮ СТРОКУ
+    # client.post(f"/context/{CONTEXT_ID}/clear")
 
     prompt = Prompt(content=MESSAGE)
     data = [prompt.model_dump(mode="json")]

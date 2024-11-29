@@ -5,6 +5,7 @@ import aiohttp
 from pydantic import BaseModel
 
 from src.domain.context import Context
+from src.domain.project import Project
 from src.domain.prompt import Prompt
 from src.domain.recommendation import Recommendation
 
@@ -15,8 +16,6 @@ class MessageSchema(BaseModel):
 
     def __str__(self):
         return f"Message({self.content}) from role={self.role}"
-
-
 
 
 class UsageSchema(BaseModel):
@@ -82,6 +81,19 @@ class LLMAdapter:
                 response.raise_for_status()
                 return await response.json()
 
+    async def send_project(
+            self,
+            project: Project,
+            context: Context,
+    ):
+        messages = [
+            MessageSchema(role="system", content="Response in russian language only")
+        ]
+        if context and context.content:
+            messages.append(
+                MessageSchema(role="system", content=f"Use this context for answer: {context.content}")
+            )
+
     async def send_prompts_with_context(
             self,
             prompts: Prompt | Iterable[Prompt],
@@ -109,16 +121,6 @@ class LLMAdapter:
             messages=messages
         )
         json_data = await self._request(schema)
-        response = ResponseSchema(**json_data)
-        result = []
-        for choice in response.choices:
-            result.append(Recommendation(content=choice.message.content))
-        return result
-
-    async def send_context(self, context: Context) -> list[Recommendation]:
-        json_data = await self._request(
-            RequestSchema.from_context(context)
-        )
         response = ResponseSchema(**json_data)
         result = []
         for choice in response.choices:
