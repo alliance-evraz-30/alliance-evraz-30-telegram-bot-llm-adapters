@@ -3,9 +3,11 @@ from urllib.parse import urlparse
 from async_pymongo import AsyncClient
 
 from src import config
+from src.adapters.repos.lllm_adapter import LLMAdapter
 from src.adapters.repos.project_repo import ProjectRepo
 from src.adapters.repos.prompt_repo import PromptRepo
 from src.services.project_services import ProjectService
+from src.services.prompt_services import PromptService
 from src.services.startup_services import StartupService
 
 
@@ -14,6 +16,8 @@ class Bootstrap:
         self._database = None
         self._project_repo = None
         self._prompt_repo = None
+        self._llm_adapter = None
+        self._prompt_service = None
         self._project_service = None
         self._startup_service = None
 
@@ -43,10 +47,20 @@ class Bootstrap:
             self._prompt_repo = PromptRepo(self.database())
         return self._prompt_repo
 
+    def llm_adapter(self) -> LLMAdapter:
+        if not self._llm_adapter:
+            self._llm_adapter = LLMAdapter()
+        return self._llm_adapter
+
     def startup_service(self) -> StartupService:
         if not self._startup_service:
             self._startup_service = StartupService(self.prompt_repo())
         return self._startup_service
+
+    def prompt_service(self) -> PromptService:
+        if not self._prompt_service:
+            self._prompt_service = PromptService(self.llm_adapter())
+        return self._prompt_service
 
 
 container = Bootstrap()
