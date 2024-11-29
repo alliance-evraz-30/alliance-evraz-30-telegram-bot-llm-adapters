@@ -46,10 +46,15 @@ async def send_prompts(
     crud_service = container.context_service()
     llm_service = container.context_llm_service()
 
+    # Получаем контекст, комбинируем с промтами, сохраняем
     context = await crud_service.get_one_by_id(context_id)
-    context = llm_service.combine_context_with_prompts(context, data)
+    context = await llm_service.combine_context_with_prompts(context, data)
     await crud_service.update_one(context)
 
+    # Получаем ответ модели, комбинируем контекст с рекомендациями, сохраняем
     recommendations = await llm_service.send_context(context)
+    context = await llm_service.combine_context_with_recommendations(context, recommendations)
+    await crud_service.update_one(context)
+
     return recommendations
 

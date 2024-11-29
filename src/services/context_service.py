@@ -23,8 +23,11 @@ class ContextLLMService:
     async def summarize(self, context: Context) -> Context:
         pass
 
-    def combine_context_with_prompts(self, context: Context, prompts: Iterable[Prompt]) -> Context:
+    async def combine_context_with_prompts(self, context: Context, prompts: Iterable[Prompt]) -> Context:
         pass
 
-    def send_context(self, context: Context) -> list[Recommendation]:
+    async def combine_context_with_recommendations(self, context: Context, recs: list[Recommendation]) -> Context:
+        pass
+
+    async def send_context(self, context: Context) -> list[Recommendation]:
         pass

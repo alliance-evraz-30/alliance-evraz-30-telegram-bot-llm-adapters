@@ -3,6 +3,7 @@ from typing import Iterable
 
 from pydantic import BaseModel
 
+from src.domain.context import Context
 from src.domain.project import Project
 from src.domain.prompt import Prompt
 from src.domain.recommendation import Recommendation
@@ -51,14 +52,5 @@ class RequestSchema(BaseModel):
 
 
 class LLMAdapter:
-    async def send_project(self, project: Project):
-        pass
-
-    async def send_prompts(self, prompts: Iterable[Prompt]) -> list[Recommendation]:
-        pass
-
-    async def create_context(self, context_id: str):
-        pass
-
-    async def clear_context(self, context_id: str):
+    async def send_context(self, context: Context) -> list[Recommendation]:
         pass
