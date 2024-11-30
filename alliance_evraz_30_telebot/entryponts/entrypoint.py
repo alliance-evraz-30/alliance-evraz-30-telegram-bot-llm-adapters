@@ -27,6 +27,7 @@ def runLLM(project_path: Path, excludes: set[str]) -> str:
     if len(contents) > 1:
         prompts_to_send = [
             prompts.summarise(),
+            prompts.presentation_format(),
             *contents
         ]
         response = adapter.send_prompts(prompts_to_send)
