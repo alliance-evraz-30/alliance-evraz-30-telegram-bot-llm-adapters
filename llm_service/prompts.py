@@ -1,15 +1,3 @@
-ARCHITECTURE_CONTEXT_PROMPT = """
-The project is implemented in Python and adheres to the principles of hexagonal architecture (Ports and Adapters). This approach emphasizes the separation of concerns, organizing the system into distinct, interdependent layers. The layers and their responsibilities are as follows:
-
-Configuration Layer: Handles project setup, initialization, and environment-specific settings (e.g., settings.py, config.py).
-Presentation Layer: Manages interaction with users or external systems via APIs, web interfaces, or CLI utilities. It validates inputs and formats outputs. Includes controllers, serializers, and routing files.
-Application Layer: Coordinates use cases and workflows, connecting the Presentation and Domain layers. It executes business processes, enforces validation, and interacts with external systems via defined interfaces (e.g., services.py, orchestrators).
-Domain Layer: The core business logic, including entities, rules, and domain services. This layer is independent of frameworks or external systems and contains models, value objects, and domain-specific operations (e.g., product.py, order_validation.py).
-Infrastructure Layer: Manages technical concerns such as databases, external APIs, logging, and caching. It provides secondary adapters and implements interfaces defined in the Application Layer (e.g., repositories.py, api_clients.py).
-This modular structure supports dependency inversion, ensuring that the core business logic is decoupled from external systems. It promotes testability, scalability, and flexibility, enabling independent development and modification of each layer.
-"""
-
-
 def about_architecture():
     return (
         "The project is implemented in Python and adheres to the principles of hexagonal architecture"
