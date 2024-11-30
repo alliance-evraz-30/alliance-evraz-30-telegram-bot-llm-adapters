@@ -25,4 +25,4 @@ poetry run python alliance_evraz_30_telebot/bot.py
 
 ## Полезные ссылки
 - [Описание задачи хакатона](https://buildin.ai/phystech_gensis/share/f93cf849-5ffa-4fa9-b5ef-f9f8c0f3e1fe?code=2VZLPR)
-- [Ссылка на бота](t.me/alliance_team_evraz_30_bot)
+- [Ссылка на бота](https://t.me/alliance_team_evraz_30_bot)
