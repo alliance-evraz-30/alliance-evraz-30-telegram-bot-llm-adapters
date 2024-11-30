@@ -163,5 +163,8 @@ def convert_path_to_structure(root: Path, excludes: set[str]) -> dict:
         if code:
             result[str(relative_path)] = analyze_module_structure(code)
     result = clean_empty_keys(result)
-    print_project_structure(result)
     return result
+
+
+def split_text_in_chunks(text: str) -> list[str]:
+    return [text]

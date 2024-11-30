@@ -147,3 +147,16 @@ Ensure that:
 3. Both dictionaries (hierarchical structure and layer mapping) are returned wrapped in `START_JSON` and `END_JSON`.
 
 """
+
+
+def get_prompts():
+    return [
+        ARCHITECTURE_CONTEXT_PROMPT,
+        *PROMPTS
+    ]
+
+
+def get_summarise_prompts():
+    return [
+        "Summarise messages below",
+    ]
