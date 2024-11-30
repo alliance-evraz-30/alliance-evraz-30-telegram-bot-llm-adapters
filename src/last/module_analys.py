@@ -1,4 +1,7 @@
 import ast
+from pathlib import Path
+
+from src.last.services import parse_project_structure, transform_tree_leaves, read_file
 
 
 class ModuleAnalyzer(ast.NodeVisitor):
@@ -52,5 +55,6 @@ def analyze_module_structure(module_code: str):
         return analyzer.structure
     except SyntaxError as e:
         return "ParsingError"
+
 
 
