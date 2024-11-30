@@ -6,7 +6,7 @@
 
 1. Клонирование репозитория
 ```bash
-git clone git@github.com:alliance-evraz-30/back.git
+git clone git@github.com:alliance-evraz-30/alliance-evraz-30-telegram-bot-llm-adapters.git
 ```
 
 2. Настройка Poetry и Python
