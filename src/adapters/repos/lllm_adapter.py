@@ -84,15 +84,12 @@ class LLMAdapter:
     async def send_project(
             self,
             project: Project,
-            context: Context,
+            prompts: Iterable[Prompt],
     ):
         messages = [
             MessageSchema(role="system", content="Response in russian language only")
         ]
-        if context and context.content:
-            messages.append(
-                MessageSchema(role="system", content=f"Use this context for answer: {context.content}")
-            )
+
 
     async def send_prompts_with_context(
             self,

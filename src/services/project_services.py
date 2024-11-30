@@ -58,6 +58,8 @@ def print_project_structure(structure: dict, indent: int = 0):
             print_project_structure(value, indent + 1)
 
 
+from pathlib import Path
+
 def parse_project_structure(
         root: Path,
         exclude: set[str] = None,
@@ -73,10 +75,15 @@ def parse_project_structure(
 
         if item.is_dir():
             # Если это директория, рекурсивно собираем её содержимое
-            structure[item.name] = parse_project_structure(item)
+            structure[item.name] = parse_project_structure(item, exclude)
         elif item.is_file():
-            # Если это файл, добавляем его в структуру
-            structure[item.name] = item
+            # Если это файл, читаем его содержимое
+            try:
+                with open(item, 'r', encoding='utf-8') as file:
+                    structure[item.name] = file.read()
+            except Exception as e:
+                # Если не удаётся прочитать файл, записываем ошибку
+                structure[item.name] = f"Error reading file: {e}"
 
     return structure
 

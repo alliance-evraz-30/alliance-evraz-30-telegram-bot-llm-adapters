@@ -1,14 +1,11 @@
-from pathlib import Path
 from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
 
 from src.bootstrap import Bootstrap
-from src.domain.project import Project
 from src.domain.prompt import Prompt
 from src.domain.recommendation import Recommendation
-from src.enums import TargetLanguage
 from src.main import app
 
 
@@ -30,7 +27,7 @@ def client():
 
 CONTEXT_ID = UUID("cf08492e-1984-4f0b-bf61-fde6e4f4e4ad")
 
-MESSAGE = ("Покажи мне эндпоинт,  на который я могу прислать тебе файл")
+MESSAGE = ("А дальше?")
 
 
 @pytest.mark.asyncio
@@ -49,5 +46,3 @@ async def test_foo(client):
     print()
     for rec in recs:
         print(rec.content)
-
-
