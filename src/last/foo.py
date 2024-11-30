@@ -60,6 +60,10 @@ class Response(BaseModel):
         for choice in self.choices:
             print(choice.message.content)
 
+    def get_content(self):
+        for choice in self.choices:
+            return choice.message.content
+
 
 class Request(BaseModel):
     model: str = "mistral-nemo-instruct-2407"
@@ -84,16 +88,20 @@ class LLMAdapter:
         response.raise_for_status()
         return response.json()
 
-    def send_prompts(self, prompts: list[str], ) -> Response:
+    def send_system_prompts(self, prompts: list[str]):
         messages = [
-            # Message(role="user",
-            #         content="Do you know what is Hexagonal architecture (also known as the Ports and Adapters Architecture)?"),
-            # Message(role="user",
-            #         content="If I send you a Python file, can you analyze which layer the code belongs to in the hexagonal architecture?"),
-
+            Message(role="system", content=prompt)
+            for prompt in prompts
         ]
+
+        jsons_data = self._request(messages)
+        response = Response(**jsons_data)
+        return response
+
+    def send_prompts(self, prompts: list[str], role="user") -> Response:
+        messages = []
         for prompt in prompts:
-            message = Message(role="user", content=prompt)
+            message = Message(role=role, content=prompt)
             messages.append(message)
 
         json_data = self._request(messages)
@@ -109,7 +117,7 @@ def converter(root: Path, excludes: set[str]):
 
 
 def main():
-    project_path = Path("D:/market/user/raketa")
+    project_path = Path("D:/hakatons/files/RESTfulAPI-master 2/RESTfulAPI-master")
     excludes = {
         ".idea",
         ".venv",
@@ -128,6 +136,13 @@ def main():
 
     llm = LLMAdapter()
     response = llm.send_prompts(prompts)
+
+    content = response.get_content()
+    prompts = [
+        "Переведи это текст на русский",
+        content,
+    ]
+    response = llm.send_system_prompts(prompts)
     response.print()
 
 
