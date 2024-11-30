@@ -166,5 +166,26 @@ def convert_path_to_structure(root: Path, excludes: set[str]) -> dict:
     return result
 
 
-def split_text_in_chunks(text: str) -> list[str]:
-    return [text]
+def split_text_in_chunks(text: str, max_length: int = 10_000) -> list[str]:
+    if len(text) <= max_length:
+        return [text]
+
+    chunks = []
+    start = 0
+
+    while start < len(text):
+        # Определяем конец текущего блока
+        end = start + max_length
+
+        # Если конец блока попадает на середину слова, корректируем
+        if end < len(text):
+            # Ищем последний пробел или символ конца строки до конца блока
+            end = text.rfind(' ', start, end) if ' ' in text[start:end] else end
+            if end <= start:  # Если пробел не найден
+                end = start + max_length  # Просто режем текст строго по границе
+
+        # Добавляем часть текста в список
+        chunks.append(text[start:end])
+        start = end
+
+    return chunks

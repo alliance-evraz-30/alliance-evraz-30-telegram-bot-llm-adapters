@@ -33,20 +33,3 @@ def run(project_path: Path, excludes: set[str]) -> str:
 
     return response.get_content()
 
-
-def main():
-    project_path = Path("D:/hakatons/files/RESTfulAPI-master 2/RESTfulAPI-master")
-    excludes = {
-        ".idea",
-        ".venv",
-        ".git",
-        ".gitignore",
-        ".env",
-        "__pycache__",
-    }
-    result = run(project_path, excludes)
-    print(result)
-
-
-if __name__ == "__main__":
-    main()
