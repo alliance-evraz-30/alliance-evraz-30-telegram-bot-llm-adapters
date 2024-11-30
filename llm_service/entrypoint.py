@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from llm_service import services, llm
 from llm_service import prompts
+from llm_service import services, llm
 
 
 def run(project_path: Path, excludes: set[str]) -> str:
@@ -15,21 +15,28 @@ def run(project_path: Path, excludes: set[str]) -> str:
 
     contents: list[str] = []
     for chunk in chunks:
-        prompts_to_send = prompts.get_prompts()
-        prompts_to_send.append(chunk)
+        prompts_to_send = [
+            prompts.ARCHITECTURE_CONTEXT_PROMPT,
+            prompts.find_problems(),
+            chunk,
+            prompts.response_format(len(chunk) // 2),
+        ]
         response = adapter.send_prompts(prompts_to_send)
         contents.append(response.get_content())
 
     if len(contents) > 1:
-        prompts_to_send = prompts.get_summarise_prompts()
-        prompts_to_send.extend(contents)
+        prompts_to_send = [
+            prompts.summarise(),
+            *contents
+        ]
         response = adapter.send_prompts(prompts_to_send)
         content = response.get_content()
     else:
         content = contents[0]
 
-    response = adapter.send_prompts(["Translate this text in russian: " + content])
-    response.print()
-
-    return response.get_content()
-
+    response = adapter.send_prompts([
+        prompts.translate(),
+        content,
+    ])
+    content = response.get_content()
+    return content

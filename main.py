@@ -4,7 +4,7 @@ from llm_service.entrypoint import run
 
 
 def main():
-    project_path = Path("D:/hakatons/files/2020.2-Anunbis-develop")
+    project_path = Path("D:/hakatons/files/RESTfulAPI-master 2/")
     excludes = {
         ".idea",
         ".venv",
