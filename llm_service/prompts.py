@@ -10,27 +10,27 @@ This modular structure supports dependency inversion, ensuring that the core bus
 """
 
 
-def domain_layer_contains_infrastructure_code():
-    return ("Analyze this Python project for potential violations of the Hexagonal Architecture principles."
-            " Specifically, check if the domain layer contains infrastructure-related code, such as "
-            "direct database queries, HTTP requests, or other external system calls. Highlight any "
-            "instances and suggest how to refactor them to ensure proper separation of concerns.")
-
-
-def review_ports():
-    return ("Review the ports and adapters in this Python project. Are they designed with "
-            "appropriate granularity? Look for ports that are either too broad (e.g., handling "
-            "unrelated operations in a single interface) or too fine-grained (e.g., splitting highly"
-            " related operations into separate interfaces). Provide recommendations to balance "
-            "granularity in alignment with business context.")
-
-
-def testing_strategy():
-    return ("Assess the testing strategy in this Python project. Are there sufficient unit tests"
-            " for the domain logic, and are they isolated from external dependencies? "
-            "Check if ports are tested using mock objects or fakes, and whether adapters"
-            " are validated with integration tests. Identify gaps in test coverage and "
-            "suggest improvements to align with Hexagonal Architecture principles.")
+# def domain_layer_contains_infrastructure_code():
+#     return ("Analyze this Python project for potential violations of the Hexagonal Architecture principles."
+#             " Specifically, check if the domain layer contains infrastructure-related code, such as "
+#             "direct database queries, HTTP requests, or other external system calls. Highlight any "
+#             "instances and suggest how to refactor them to ensure proper separation of concerns.")
+#
+#
+# def review_ports():
+#     return ("Review the ports and adapters in this Python project. Are they designed with "
+#             "appropriate granularity? Look for ports that are either too broad (e.g., handling "
+#             "unrelated operations in a single interface) or too fine-grained (e.g., splitting highly"
+#             " related operations into separate interfaces). Provide recommendations to balance "
+#             "granularity in alignment with business context.")
+#
+#
+# def testing_strategy():
+#     return ("Assess the testing strategy in this Python project. Are there sufficient unit tests"
+#             " for the domain logic, and are they isolated from external dependencies? "
+#             "Check if ports are tested using mock objects or fakes, and whether adapters"
+#             " are validated with integration tests. Identify gaps in test coverage and "
+#             "suggest improvements to align with Hexagonal Architecture principles.")
 
 
 def find_problems():
