@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "alliance-evraz-30-telebot"
+version = "0.1.0"
+description = ""
+authors = ["Vladislav Yakonyuk <vladislavvogonov@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+pytelegrambotapi = "^4.24.0"
+pydantic = "^2.10.2"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
