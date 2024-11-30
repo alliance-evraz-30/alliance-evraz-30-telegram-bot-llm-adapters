@@ -1,14 +1,13 @@
 import datetime
 import json
 from enum import StrEnum
-from pathlib import Path
 
 import requests
 from pydantic import BaseModel
 
+from src.last import prompts
 from src.last.module_analys import analyze_module_structure
-from src.last.prompts import PROMPTS
-from src.last.services import parse_project_structure, print_project_structure, transform_tree_leaves, read_file
+from src.last.services import *
 
 
 class LayerName(StrEnum):
@@ -88,20 +87,10 @@ class LLMAdapter:
         response.raise_for_status()
         return response.json()
 
-    def send_system_prompts(self, prompts: list[str]):
-        messages = [
-            Message(role="system", content=prompt)
-            for prompt in prompts
-        ]
-
-        jsons_data = self._request(messages)
-        response = Response(**jsons_data)
-        return response
-
-    def send_prompts(self, prompts: list[str], role="user") -> Response:
+    def send_prompts(self, data: list[str]) -> Response:
         messages = []
-        for prompt in prompts:
-            message = Message(role=role, content=prompt)
+        for prompt in data:
+            message = Message(role="user", content=prompt)
             messages.append(message)
 
         json_data = self._request(messages)
@@ -109,11 +98,66 @@ class LLMAdapter:
         return response
 
 
-def converter(root: Path, excludes: set[str]):
-    structure = parse_project_structure(root, excludes)
-    structure = transform_tree_leaves(structure, lambda path: read_file(path))
-    structure = transform_tree_leaves(structure, lambda code: analyze_module_structure(code))
-    return structure
+class Pipeline:
+    def __init__(self, root: Path, excludes: set[str]):
+        self._root = root
+        self._excludes = excludes
+        self._structure = {}
+        self._paths = []
+
+    def convert_path_to_simple_structure(self):
+        self._structure = parse_project_structure(self._root, self._excludes)
+        return self
+
+    def parse_file_paths(self):
+        _ = transform_tree_leaves(self._structure, lambda path: self._paths.append(path))
+        llm = LLMAdapter()
+        prompts_to_send = [
+            prompts.ARCHITECTURE_CONTEXT_PROMPT,
+            prompts.STRUCTURE_FROM_PATHS_ONLY,
+            json.dumps([str(get_relative_path(self._root, x)) for x in self._paths])
+
+        ]
+        response = llm.send_prompts(prompts_to_send)
+        response.print()
+
+        return self
+
+    def divide_simple_structure_into_layers(self):
+        llm = LLMAdapter()
+        structure = transform_tree_leaves(self._structure, lambda path: str(path))
+        data = json.dumps(structure)
+
+        prompts_to_send = [
+            prompts.ARCHITECTURE_CONTEXT_PROMPT,
+            prompts.DIVIDE_DOMAIN_LAYER_PROMPT,
+            data,
+        ]
+
+        response = llm.send_prompts(prompts_to_send)
+        content = response.get_content()
+        domain_structure = extract_json(content)
+        print(domain_structure, end="\n\n")
+
+        prompts_to_send = [
+            prompts.ARCHITECTURE_CONTEXT_PROMPT,
+            prompts.DIVIDE_APPLICATION_LAYER_PROMPT,
+            data,
+        ]
+
+        response = llm.send_prompts(prompts_to_send)
+        content = response.get_content()
+        application_structure = extract_json(content)
+        print(application_structure, end="\n\n")
+
+        return self
+
+    def code_structure(self):
+        self._structure = transform_tree_leaves(self._structure, lambda path: read_file(path))
+        return self
+
+    def get_structure(self):
+        return self._structure
 
 
 def main():
@@ -126,25 +170,57 @@ def main():
         ".env",
         "__pycache__",
     }
+    pipeline = Pipeline(project_path, excludes)
+
+    structure = (
+        pipeline
+        .convert_path_to_simple_structure()
+        # .divide_simple_structure_into_layers()
+        .parse_file_paths()
+        .get_structure()
+    )
+
+
+def converter(root: Path, excludes: set[str]) -> dict:
+    structure = parse_project_structure(root, excludes)
+    paths = get_leaves_from_tree(structure)
+
+    result = {}
+    for path in paths:
+        relative_path = get_relative_path(root, path)
+        code = read_file(path)
+        if code:
+            result[str(relative_path)] = analyze_module_structure(code)
+    result = clean_empty_keys(result)
+    print_project_structure(result)
+    return result
+
+
+def main2():
+    project_path = Path("D:/hakatons/files/RESTfulAPI-master 2/RESTfulAPI-master")
+    excludes = {
+        ".idea",
+        ".venv",
+        ".git",
+        ".gitignore",
+        ".env",
+        "__pycache__",
+    }
     structure = converter(project_path, excludes)
 
-    prompts = [
-        *PROMPTS,
-        "show me the project structure",
+    prompts_to_send = [
+        prompts.ARCHITECTURE_CONTEXT_PROMPT,
         json.dumps(structure),
+        *prompts.PROMPTS,
     ]
 
     llm = LLMAdapter()
-    response = llm.send_prompts(prompts)
-
+    response = llm.send_prompts(prompts_to_send)
     content = response.get_content()
-    prompts = [
-        "Переведи это текст на русский",
-        content,
-    ]
-    response = llm.send_system_prompts(prompts)
+
+    response = llm.send_prompts(["Translate this text in russian: " + content])
     response.print()
 
 
 if __name__ == "__main__":
-    main()
+    main2()
