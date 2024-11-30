@@ -76,7 +76,7 @@ def analyze_module_structure(module_code: str):
 
         return structure
     except SyntaxError as e:
-        return {"error": f"Syntax error in module code: {e}"}
+        return "ParsingError"
 
 
 def get_leaves_from_tree(data: dict):
@@ -105,9 +105,9 @@ def transform_tree_leaves(data, callback: Callable[[Any], Any]):
 def print_project_structure(structure: dict, indent: int = 0):
     for key, value in structure.items():
         # Печатаем имя элемента с соответствующим отступом
-        print('  ' * indent + str(key))
+        print('  ' * indent + str(key),)
 
         if isinstance(value, dict):
             print_project_structure(value, indent + 1)
         else:
-            print(value)
+            print('  ' * (1+ indent), value)

@@ -121,14 +121,13 @@ class GodService:
 
 
 def main():
-    project_path = Path("D:/market/user/raketa")
+    project_path = Path("D:/market/user")
     excludes = {
         ".idea",
         ".venv",
         ".git",
         ".gitignore",
         ".env",
-        "tests",
     }
 
     builder = GodService(project_path, exclude=excludes)
@@ -149,3 +148,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
