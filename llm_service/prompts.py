@@ -152,3 +152,16 @@ def find_problems_():
         "When analyzing the code, provide specific examples of the issues found, referencing the relevant code snippets or modules. "
         "Offer recommendations on how to address each problem, aligned with the principles of Hexagonal Architecture and best practices in software engineering."
     )
+
+
+def presentation_format():
+    return (
+        "The text should be clearly structured: broken into paragraphs, with empty lines between paragraphs.\n\n"
+
+        "If your response includes code, use Markdown formatting for it. Example:\n\n"
+
+        "```python\n"
+        "def example_function():\n"
+        "    pass\n"
+        "```\n\n"
+    )
