@@ -18,15 +18,17 @@ def handle_document(message: Message) -> None:
     bot.reply_to(message, "Файл загружается...")
 
     try:
-        pdf_path = process_zip_file(
+        result = process_zip_file(
             bot=bot,
             file_id=message.document.file_id,
             file_name=message.document.file_name,
             chat_id=message.chat.id,
         )
 
-        with open(pdf_path, "rb") as pdf_file:
-            bot.send_document(message.chat.id, pdf_file)
+        bot.send_message(chat_id=message.chat.id, text="```md\n{result}```", parse_mode="markdown")
+
+        # with open(pdf_path, "rb") as pdf_file:
+        #     bot.send_document(message.chat.id, pdf_file)
     except Exception as e:
         bot.reply_to(message, f"Ошибка обработки файла: {str(e)}")
 
