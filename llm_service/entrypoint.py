@@ -36,6 +36,7 @@ def run(project_path: Path, excludes: set[str]) -> str:
 
     response = adapter.send_prompts([
         prompts.translate(),
+        prompts.presentation_format(),
         content,
     ])
     content = response.get_content()
