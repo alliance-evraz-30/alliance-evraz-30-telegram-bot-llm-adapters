@@ -16,7 +16,7 @@ def run(project_path: Path, excludes: set[str]) -> str:
     contents: list[str] = []
     for chunk in chunks:
         prompts_to_send = [
-            prompts.ARCHITECTURE_CONTEXT_PROMPT,
+            prompts.about_architecture(),
             prompts.find_problems(),
             chunk,
             prompts.response_format(len(chunk) // 2),
