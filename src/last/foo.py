@@ -5,9 +5,8 @@ from pathlib import Path
 import requests
 from pydantic import BaseModel
 
-from src.last.services import parse_project_structure, print_project_structure, transform_tree_leaves, read_file, \
-    analyze_module_structure
-
+from src.last.module_analys import analyze_module_structure
+from src.last.services import parse_project_structure, print_project_structure, transform_tree_leaves, read_file
 
 class LayerName(StrEnum):
     Domain = "Domain"
@@ -121,13 +120,14 @@ class GodService:
 
 
 def main():
-    project_path = Path("D:/market/user")
+    project_path = Path("D:/market/user/raketa")
     excludes = {
         ".idea",
         ".venv",
         ".git",
         ".gitignore",
         ".env",
+        "__pycache__",
     }
 
     builder = GodService(project_path, exclude=excludes)

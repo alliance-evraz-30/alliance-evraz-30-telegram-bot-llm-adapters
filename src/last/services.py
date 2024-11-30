@@ -49,36 +49,6 @@ def parse_project_structure(
     return structure
 
 
-def analyze_module_structure(module_code: str):
-    try:
-        # Parse the Python code into an abstract syntax tree (AST)
-        tree = ast.parse(module_code)
-
-        # Initialize containers for imports, classes, and functions
-        structure = {
-            "imports": [],
-            "classes": [],
-            "functions": [],
-        }
-
-        # Traverse the AST nodes
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):  # Check if the node is an import statement
-                for alias in node.names:
-                    structure["imports"].append(alias.name)
-            elif isinstance(node, ast.ImportFrom):  # Check for 'from ... import ...'
-                for alias in node.names:
-                    structure["imports"].append(f"from {node.module} import {alias.name}")
-            elif isinstance(node, ast.ClassDef):  # Check if the node is a class definition
-                structure["classes"].append(node.name)
-            elif isinstance(node, ast.FunctionDef):  # Check if the node is a function definition
-                structure["functions"].append(node.name)
-
-        return structure
-    except SyntaxError as e:
-        return "ParsingError"
-
-
 def get_leaves_from_tree(data: dict):
     leaves = []
 
@@ -111,3 +81,4 @@ def print_project_structure(structure: dict, indent: int = 0):
             print_project_structure(value, indent + 1)
         else:
             print('  ' * (1+ indent), value)
+
