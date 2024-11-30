@@ -25,7 +25,7 @@ def handle_document(message: Message) -> None:
             chat_id=message.chat.id,
         )
 
-        bot.send_message(chat_id=message.chat.id, text="```md\n{result}```", parse_mode="markdown")
+        bot.send_message(chat_id=message.chat.id, text="```md\n" + result + "\n```", parse_mode="markdown")
 
         # with open(pdf_path, "rb") as pdf_file:
         #     bot.send_document(message.chat.id, pdf_file)
