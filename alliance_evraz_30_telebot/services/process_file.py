@@ -9,7 +9,7 @@ def process_zip_file(bot: TeleBot, file_id: str, file_name: str, chat_id: int) -
     local_file_path = save_file(bot, file_id, generate_unique_file_name(chat_id, file_name))
 
     bot.send_message(chat_id, "Я отправил ваш проект на code-review. " +
-                     "Это займет несколько минут. Пожалуйста, не беспокойте меня в это время. " + 
+                     "Это займет несколько минут. Пожалуйста, не беспокойте в это время. " + 
                      "Когда работа завершится, я отправлю вам результат в чат."
     )
 
