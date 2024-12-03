@@ -14,7 +14,6 @@ def process_zip_file(bot: TeleBot, file_id: str, file_name: str, chat_id: int) -
     )
 
     result = runLLM(local_file_path, excludes)
-    print(result)
 
     return result
 
